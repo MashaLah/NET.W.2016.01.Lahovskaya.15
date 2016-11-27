@@ -9,7 +9,7 @@ namespace Task2
     public class BinarySearchTree<T>
     {
         private Node<T> root;
-        private int count;
+        //private int count;
         private IComparer<T> comparer;
 
         /// <summary>
@@ -26,7 +26,7 @@ namespace Task2
             if (ReferenceEquals(comparer, null)) throw new ArgumentNullException(nameof(comparer));
             this.comparer = comparer;
             root = null;
-            count = 0;
+            //count = 0;
         }
 
         /// <summary>
@@ -77,7 +77,7 @@ namespace Task2
             while (current != null)
             {
                 result = comparer.Compare(current.Data, value);
-                if (result == 0) return;
+                if (result == 0) throw new ArgumentException($"{value} is already exists");
                 if (result > 0)
                 {
                     parent = current;
@@ -89,7 +89,7 @@ namespace Task2
                     current = current.Right;
                 }
             }
-            count++;
+            //count++;
             if (parent == null) root = node;
             else
             {
@@ -103,10 +103,9 @@ namespace Task2
         /// Removes <paramref name="value"/> from tree.
         /// </summary>
         /// <param name="value">Item to remove.</param>
-        /// <returns>If removed successfull true, else false.</returns>
-        public bool Remove(T value)
+        public void Remove(T value)
         {
-            if (root == null) return false;
+            if (root == null) throw new InvalidOperationException($"The tree is empty.");
             Node<T> current = root;
             Node<T> parent = null;
             int result = comparer.Compare(current.Data, value);
@@ -122,10 +121,10 @@ namespace Task2
                     parent = current;
                     current = current.Right;
                 }
-                if (current == null) return false;
+                if (current == null) throw new ArgumentException($"{value} doesn't exists in the tree.");
                 else result = comparer.Compare(current.Data, value);
             }
-            count--;
+            //count--;
 
             if (current.Right == null)
             {
@@ -175,7 +174,13 @@ namespace Task2
                     if (result < 0) parent.Right = leftmost;
                 }
             }
-            return true;
+        }
+
+        public IEnumerable<T> Preorder()
+        {
+            if (root == null) yield break;
+            //if (root.Left != null) 
+
         }
 
         private class Node<T>
