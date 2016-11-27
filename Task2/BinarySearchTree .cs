@@ -9,13 +9,14 @@ namespace Task2
     public class BinarySearchTree<T>
     {
         private Node<T> root;
-        //private int count;
         private IComparer<T> comparer;
+
+        public int Count { get; private set; }
 
         /// <summary>
         /// Initializes <see cref="comparer"/> with <paramref name="comparer"/>. 
         /// Set <see cref="root"/> is null.
-        /// Set <see cref="count"/> =0.
+        /// Set <see cref="Count"/> =0.
         /// </summary>
         /// <param name="comparer">IComparer object.</param>
         /// <exception cref="ArgumentNullException">
@@ -26,7 +27,7 @@ namespace Task2
             if (ReferenceEquals(comparer, null)) throw new ArgumentNullException(nameof(comparer));
             this.comparer = comparer;
             root = null;
-            //count = 0;
+            Count = 0;
         }
 
         /// <summary>
@@ -89,7 +90,7 @@ namespace Task2
                     current = current.Right;
                 }
             }
-            //count++;
+            Count++;
             if (parent == null) root = node;
             else
             {
@@ -124,7 +125,7 @@ namespace Task2
                 if (current == null) throw new ArgumentException($"{value} doesn't exists in the tree.");
                 else result = comparer.Compare(current.Data, value);
             }
-            //count--;
+            Count--;
 
             if (current.Right == null)
             {
@@ -176,12 +177,28 @@ namespace Task2
             }
         }
 
+        /// <summary>
+        /// Preorder traversal.
+        /// </summary>
+        /// <returns>Node's data.</returns>
         public IEnumerable<T> Preorder()
         {
             if (root == null) yield break;
-            //if (root.Left != null) 
-
+            Stack<Node<T>> nodeStack = new Stack<Node<T>>();
+            nodeStack.Push(root);
+            while (nodeStack.Count > 0)
+            {
+                Node<T> node = nodeStack.Pop();
+                yield return node.Data;
+                if (node.Right != null) nodeStack.Push(node.Right);
+                if (node.Left != null) nodeStack.Push(node.Left);
+            }
         }
+
+        /*public IEnumerable<T> InOrder()
+        {
+
+        }*/
 
         private class Node<T>
         {
