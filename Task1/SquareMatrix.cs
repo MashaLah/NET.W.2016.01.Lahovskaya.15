@@ -89,6 +89,11 @@ namespace Task1
             }
         }
 
+        /// <summary>
+        /// Accept visitor.
+        /// </summary>
+        /// <param name="visitor">First matrix.</param>
+        /// <param name="matrix">Second matrix.</param>
         public void Accept(ISquareMatrixVisitor<T> visitor, SquareMatrix<T> matrix)
         {
             visitor.Visit((dynamic)this, matrix);
