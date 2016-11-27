@@ -150,7 +150,7 @@ namespace Task2
             public T Data { get; set; }
             public Node<T> Left { get; set; }
             public Node<T> Right { get; set; }
-            //public Node<T> parent { get; set; }
+
             public Node(T data)
             {
                 Data = data;
