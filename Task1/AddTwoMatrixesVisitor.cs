@@ -29,8 +29,8 @@ namespace Task1
         /// </exception>
         public void Visit(SquareMatrix<T> firstMatrix, SquareMatrix<T> secondmatrix)
         {
-            if (firstMatrix == null) throw new ArgumentNullException(nameof(firstMatrix));
-            if (secondmatrix == null) throw new ArgumentNullException(nameof(secondmatrix));
+            if (ReferenceEquals(firstMatrix, null)) throw new ArgumentNullException(nameof(firstMatrix));
+            if (ReferenceEquals(secondmatrix, null)) throw new ArgumentNullException(nameof(secondmatrix));
             if (firstMatrix.Order != secondmatrix.Order)
                 throw new ArgumentException($"{nameof(firstMatrix)} and {nameof(secondmatrix)} has different order.");
 

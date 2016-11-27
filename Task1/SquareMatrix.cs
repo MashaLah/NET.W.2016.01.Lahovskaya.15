@@ -48,7 +48,7 @@ namespace Task1
         /// </exception>
         public SquareMatrix(T[,] matrix)
         {
-            if (matrix == null) throw new ArgumentNullException(nameof(matrix));
+            if (ReferenceEquals(matrix, null)) throw new ArgumentNullException(nameof(matrix));
             if (matrix.Length == 0) throw new ArgumentOutOfRangeException(nameof(matrix));
 
             if (matrix.GetLength(0) != matrix.GetLength(1))
