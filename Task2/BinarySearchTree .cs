@@ -177,28 +177,53 @@ namespace Task2
             }
         }
 
+        public IEnumerable<T> PreOrder => Preorder(root);
+
+        public IEnumerable<T> InOrder => Inorder(root);
+
+        public IEnumerable<T> PostOrder => Postorder(root);
+
         /// <summary>
         /// Preorder traversal.
         /// </summary>
         /// <returns>Node's data.</returns>
-        public IEnumerable<T> Preorder()
+        private IEnumerable<T> Preorder(Node<T> node)
         {
-            if (root == null) yield break;
-            Stack<Node<T>> nodeStack = new Stack<Node<T>>();
-            nodeStack.Push(root);
-            while (nodeStack.Count > 0)
-            {
-                Node<T> node = nodeStack.Pop();
-                yield return node.Data;
-                if (node.Right != null) nodeStack.Push(node.Right);
-                if (node.Left != null) nodeStack.Push(node.Left);
-            }
+            if (node == null) yield break;
+            yield return node.Data;
+            foreach (var n in Preorder(node.Left))
+                yield return n;
+            foreach (var n in Preorder(node.Right))
+                yield return n;
         }
 
-        /*public IEnumerable<T> InOrder()
+        /// <summary>
+        /// InOrder traversal.
+        /// </summary>
+        /// <returns>Node's data.</returns>
+        private IEnumerable<T> Inorder(Node<T> node)
         {
+            if (node == null) yield break;
+            foreach (var n in Inorder(node.Left))
+                yield return n;
+            yield return node.Data;
+            foreach (var n in Inorder(node.Right))
+                yield return n;
+        }
 
-        }*/
+        /// <summary>
+        /// InOrder traversal.
+        /// </summary>
+        /// <returns>Node's data.</returns>
+        private IEnumerable<T> Postorder(Node<T> node)
+        {
+            if (node == null) yield break;
+            foreach (var n in Postorder(node.Left))
+                yield return n;
+            foreach (var n in Postorder(node.Right))
+                yield return n;
+            yield return node.Data;
+        }
 
         private class Node<T>
         {
