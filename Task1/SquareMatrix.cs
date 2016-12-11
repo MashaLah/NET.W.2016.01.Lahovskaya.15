@@ -6,18 +6,8 @@ using System.Threading.Tasks;
 
 namespace Task1
 {
-    public class SquareMatrix<T>
-    {       
-        /// <summary>
-        /// Array for matrix.
-        /// </summary>
-        protected T[,] matrix;
-
-        /// <summary>
-        /// Event happens when element of matrix has been changed.
-        /// </summary>
-        public event EventHandler<string> ElementChanged;
-
+    public class SquareMatrix<T> : AbstractSquareMatrix<T> 
+    {
         /// <summary>
         /// Initialize <see cref="order"/> and create<see cref="matrix"/> with default values.
         /// </summary>
@@ -29,7 +19,7 @@ namespace Task1
         {
             if (order < 0) throw new ArgumentOutOfRangeException(nameof(order));
             Order = order;
-            matrix = new T[Order,Order];
+            matrix = new T[Order*Order];
         }
 
         /// <summary>
@@ -49,7 +39,7 @@ namespace Task1
         public SquareMatrix(T[,] matrix)
         {
             if (ReferenceEquals(matrix, null)) throw new ArgumentNullException(nameof(matrix));
-            if (matrix.Length == 0) throw new ArgumentOutOfRangeException(nameof(matrix));
+            if (matrix.Length == 0) throw new ArgumentException(nameof(matrix));
 
             if (matrix.GetLength(0) != matrix.GetLength(1))
                 throw new ArgumentException($"{nameof(matrix)} is not square matrix.");
@@ -59,53 +49,26 @@ namespace Task1
         }
 
         /// <summary>
-        /// Order of matrix.
+        /// Logic for get in indexer.
         /// </summary>
-        public int Order { get; private set; }
+        /// <param name="i">Row</param>
+        /// <param name="j">Column</param>
+        /// <returns>Value for row=<paramref name="i"/> and column=<paramref name="j"/></returns>
+        protected override T GetElement(int i, int j)=>
+            matrix[Order * i + j];
 
         /// <summary>
-        /// Indexer.
+        /// Logic for set in indexer.
         /// </summary>
-        /// <param name="i">Row.</param>
-        /// <param name="j">Column.</param>
-        /// <exception cref="ArgumentOutOfRangeException">
-        /// Throws when i or j less than 0 or bigger than <see cref="order"/>.
-        /// </exception>
-        public virtual T this[int i, int j]
+        /// <param name="i">Row</param>
+        /// <param name="j">Column</param>
+        /// <param name="value"></param>
+        /// <returns>Previous value for row=<paramref name="i"/> and column=<paramref name="j"/></returns>
+        protected override T SetElement(int i, int j, T value)
         {
-            get
-            {
-                if (i < 0 || i > Order) throw new ArgumentOutOfRangeException(nameof(i));
-                if (j < 0 || j > Order) throw new ArgumentOutOfRangeException(nameof(j));
-                return matrix[i, j];
-            }
-            set
-            {
-                if (i < 0 || i > Order) throw new ArgumentOutOfRangeException(nameof(i));
-                if (j < 0 || j > Order) throw new ArgumentOutOfRangeException(nameof(j));
-                var oldValue = matrix[i,j];
-                matrix[i, j] = value;
-                OnElementChanged($"Element on position {i} {j} has been changed from {oldValue} to {value}");
-            }
-        }
-
-        /// <summary>
-        /// Accept visitor.
-        /// </summary>
-        /// <param name="visitor">First matrix.</param>
-        /// <param name="matrix">Second matrix.</param>
-        public void Accept(ISquareMatrixVisitor<T> visitor, SquareMatrix<T> matrix)
-        {
-            visitor.Visit((dynamic)this, matrix);
-        }
-
-        /// <summary>
-        /// Invoke event <see cref="ElementChanged"/> 
-        /// </summary>
-        /// <param name="message">Information about changing.</param>
-        protected virtual void OnElementChanged(string message)
-        {
-            ElementChanged?.Invoke(this, message);
+            var oldValue = matrix[Order * i + j];
+            matrix[Order * i + j] = value;
+            return oldValue;
         }
 
         /// <summary>
@@ -115,10 +78,10 @@ namespace Task1
         private void FillWith(T[,] matrix)
         {
             int n = matrix.GetLength(0);
-            this.matrix = new T[n, n];
+            this.matrix = new T[n * n];
             for (int i = 0; i < n; i++)
                 for (int j = 0; j < n; j++)
-                    this.matrix[i, j] = matrix[i, j];
+                    this.matrix[Order * i + j] = matrix[i, j];
         }
     }
 }

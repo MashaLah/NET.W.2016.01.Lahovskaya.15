@@ -40,9 +40,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AddTwoMatrixesVisitor.cs" />
+    <Compile Include="AbstractSquareMatrix.cs" />
     <Compile Include="DiagonalMatrix.cs" />
-    <Compile Include="ISquareMatrixVisitor.cs" />
     <Compile Include="SquareMatrix.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SquareMatrixExtensions.cs" />

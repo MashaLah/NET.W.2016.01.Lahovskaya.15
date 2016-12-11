@@ -52,6 +52,7 @@ namespace Task2
         /// <returns>True if is in tree, false if not.</returns>
         public bool Find(T value)
         {
+            if (value == null) throw new ArgumentNullException(nameof(value));
             Node<T> current = root;
             int result;
             while (current != null)
@@ -70,6 +71,7 @@ namespace Task2
         /// <param name="value">Item to insert.</param>
         public void Insert(T value)
         {
+            if (value == null) throw new ArgumentNullException(nameof(value));
             Node<T> node = new Node<T>(value);
             Node<T> current = root;
             Node<T> parent = null;
@@ -78,8 +80,8 @@ namespace Task2
             while (current != null)
             {
                 result = comparer.Compare(current.Data, value);
-                if (result == 0) throw new ArgumentException($"{value} is already exists");
-                if (result > 0)
+                //if (result == 0) throw new ArgumentException($"{value} is already exists");
+                if (result >= 0)
                 {
                     parent = current;
                     current = current.Left;
@@ -95,7 +97,7 @@ namespace Task2
             else
             {
                 result = comparer.Compare(parent.Data, value);
-                if (result > 0) parent.Left = node;
+                if (result >= 0) parent.Left = node;
                 else parent.Right = node;
             }
         }
@@ -106,24 +108,28 @@ namespace Task2
         /// <param name="value">Item to remove.</param>
         public void Remove(T value)
         {
+            if (value == null) throw new ArgumentNullException(nameof(value));
             if (root == null) throw new InvalidOperationException($"The tree is empty.");
             Node<T> current = root;
             Node<T> parent = null;
             int result = comparer.Compare(current.Data, value);
-            while (result != 0)
+            if (result != 0)
             {
-                if (result > 0)
+                while (result != 0)
                 {
-                    parent = current;
-                    current = current.Left;
+                    if (result > 0)
+                    {
+                        parent = current;
+                        current = current.Left;
+                    }
+                    else if (result < 0)
+                    {
+                        parent = current;
+                        current = current.Right;
+                    }
+                    if (current == null) throw new ArgumentException($"{value} doesn't exists in the tree.");
+                    else result = comparer.Compare(current.Data, value);
                 }
-                else if (result < 0)
-                {
-                    parent = current;
-                    current = current.Right;
-                }
-                if (current == null) throw new ArgumentException($"{value} doesn't exists in the tree.");
-                else result = comparer.Compare(current.Data, value);
             }
             Count--;
 
@@ -134,12 +140,12 @@ namespace Task2
                 else
                 {
                     result = comparer.Compare(parent.Data, current.Data);
-                    if (result > 0) parent.Left = current.Left;
+                    if (result >= 0) parent.Left = current.Left;
                     if (result < 0) parent.Right = current.Left;
                 }
             }
 
-            if (current.Right.Left == null)
+            else if (current.Right.Left == null)
             {
                 current.Right.Left = current.Left;
 
@@ -148,7 +154,7 @@ namespace Task2
                 else
                 {
                     result = comparer.Compare(parent.Data, current.Data);
-                    if (result > 0) parent.Left = current.Right;
+                    if (result >= 0) parent.Left = current.Right;
                     if (result < 0) parent.Right = current.Right;
                 }
             }
@@ -171,7 +177,7 @@ namespace Task2
                 else
                 {
                     result = comparer.Compare(parent.Data, current.Data);
-                    if (result > 0) parent.Left = leftmost;
+                    if (result >= 0) parent.Left = leftmost;
                     if (result < 0) parent.Right = leftmost;
                 }
             }
